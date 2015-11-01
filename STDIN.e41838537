@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/gs/project/vdu-032-aa/jzhang/LVpicker/LVpicker_control.py", line 115, in <module>
+    control_variants = p.map(ff, sample)
+  File "/software/areas/genomics/phase2/software/python/Python-2.7.8/lib/python2.7/multiprocessing/pool.py", line 251, in map
+    return self.map_async(func, iterable, chunksize).get()
+  File "/software/areas/genomics/phase2/software/python/Python-2.7.8/lib/python2.7/multiprocessing/pool.py", line 558, in get
+    raise self._value
+IOError: file `/gs/project/vdu-032-aa/ngs/projects/CHEO/CareForRare/batch12/456_CA0014/456_CA0014.t30l30.realigned.markdup.sorted.fixmate.final.bam` not found

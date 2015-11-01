@@ -1,0 +1,8 @@
+setup.py
+lolopicker/__init__.py
+lolopicker.egg-info/PKG-INFO
+lolopicker.egg-info/SOURCES.txt
+lolopicker.egg-info/dependency_links.txt
+lolopicker.egg-info/not-zip-safe
+lolopicker.egg-info/requires.txt
+lolopicker.egg-info/top_level.txt
