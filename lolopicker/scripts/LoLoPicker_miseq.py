@@ -9,16 +9,21 @@ from scipy.stats import binom
 from scipy.cluster.vq import kmeans2, whiten
 
 sample=[]
-inputlist = open("/gs/project/vdu-032-aa/jzhang/DNET/test")
+inputlist = open("/gs/project/vdu-032-aa/jzhang/DNET/Miseq_samplelist.txt")
 for line in ( raw.strip().split() for raw in inputlist ):
 	sample.append(line)
 inputlist.close()
 
 def process_stats(chr, pos, ref_seq, alt):
+	print chr, pos, alt
 	c_alf_array=[]; c_INFO_array=[]; judge_array=[]
 	for bam in sample:
 		c_ref_cov=0; c_variant_cov=0;
 		samfile = pysam.AlignmentFile(bam[0])
+		if "exon" in bam[0]:
+                        chr = "chr8"
+                else:
+                        chr = "8"
 		for pileupcolumn in samfile.pileup(chr, pos, pos+1, truncate=True):
 			if pileupcolumn.pos ==  pos:
 				for pileupread in pileupcolumn.pileups:
@@ -74,7 +79,13 @@ for bedline in ( raw.strip().split() for raw in open(bed)):
 	foundReg=[]
 	for bam in sample:
 		samfile = pysam.AlignmentFile(bam[0])
-		for rec in pysamstats.stat_variation(samfile, ref, chrom=bedline[0], start=int(bedline[1]), end=int(bedline[2])):
+		if "exon" in bam[0]:
+			ref = pysam.FastaFile("/gs/project/vdu-032-aa/ngs/repository/references/lib/hg19_chr_files/hg19_wRandomsNew.fa")
+			chr = "chr8"
+		else: 
+			ref = pysam.FastaFile("/gs/project/vdu-032-aa/ngs/repository/references/lib/hg19_broad_reference/Homo_sapiens_assembly19.fasta")
+			chr = "8"
+		for rec in pysamstats.stat_variation(samfile, ref, chrom=chr, start=int(bedline[1]), end=int(bedline[2])):
 			if rec['reads_pp'] >= 100:
 				if rec['mismatches_pp']/rec['reads_pp'] > 0.01:
 					chr = rec['chrom']; pos = rec['pos']; ref_seq = rec['ref']
@@ -82,6 +93,7 @@ for bedline in ( raw.strip().split() for raw in open(bed)):
 					ref_cov = 0
 					for pileupcolumn in samfile.pileup(chr, pos, pos+1, truncate=True):		
 						if pileupcolumn.pos ==  pos:
+							print rec['mismatches_pp'], rec['reads_pp'], bam[0]
 							for pileupread in pileupcolumn.pileups:
 								if pileupread.alignment.query_qualities[pileupread.query_position] >= 30:
 									if pileupread.alignment.query_sequence[pileupread.query_position] == ref_seq:
@@ -93,13 +105,15 @@ for bedline in ( raw.strip().split() for raw in open(bed)):
 									elif pileupread.alignment.query_sequence[pileupread.query_position] == "C":
 										variant_C_cov += 1
 									elif pileupread.alignment.query_sequence[pileupread.query_position] == "G":
-										variant_G_cov += 1					
+										variant_G_cov += 1	
 							total = variant_A_cov +  variant_T_cov + variant_C_cov + variant_G_cov + ref_cov
+							print total, variant_C_cov, bam[0]
 							if total >= 10:
 								t_alf_A = variant_A_cov/total
 								t_alf_T = variant_T_cov/total
 								t_alf_G = variant_G_cov/total
 								t_alf_C = variant_C_cov/total
+						
 								if t_alf_A >= 0.01:
 									try:
 										foundReg.index(str(chr)+"\t"+str(pileupcolumn.pos)+"\t"+ "A")
@@ -108,7 +122,7 @@ for bedline in ( raw.strip().split() for raw in open(bed)):
 										results = process_stats(chr, pos, ref_seq, "A")
 										if results != "NA":
 											print chr, pos, "A", results
-								if t_alf_G >= 0.01:
+								elif t_alf_G >= 0.01:
 									try:
 										foundReg.index(str(chr)+"\t"+str(pileupcolumn.pos)+"\t"+ "G")
 									except ValueError:
@@ -116,7 +130,7 @@ for bedline in ( raw.strip().split() for raw in open(bed)):
 										results = process_stats(chr, pos, ref_seq, "G") 
 										if results != "NA":
 											print chr, pos, "G", results
-								if t_alf_T >= 0.01:
+								elif t_alf_T >= 0.01:
 									try:
 										foundReg.index(str(chr)+"\t"+str(pileupcolumn.pos)+"\t"+ "T")
 									except ValueError:
@@ -124,8 +138,8 @@ for bedline in ( raw.strip().split() for raw in open(bed)):
 										results = process_stats(chr, pos, ref_seq, "T")
 										if results != "NA":
 											print chr, pos, "T", results
-								if t_alf_C >= 0.01:
-									try:
+								elif t_alf_C >= 0.01:
+									try:	
 										foundReg.index(str(chr)+"\t"+str(pileupcolumn.pos)+"\t"+ "C")
 									except ValueError:
 										foundReg.append(str(chr)+"\t"+str(pileupcolumn.pos)+"\t"+ "C")
