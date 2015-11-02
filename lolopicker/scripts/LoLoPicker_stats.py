@@ -36,6 +36,7 @@ if __name__ == '__main__':
 	
 	stats_hash = {}
 	varfile = open(inputvariant)
+	next(varfile)
 	p_vals=[]
 	
 	ftemp = open(statsfile, 'w')
