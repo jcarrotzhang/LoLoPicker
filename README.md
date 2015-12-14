@@ -10,5 +10,5 @@ LoLoPicker_control.py -l samplelist -r reference -n thread -o outputpath
 
 #Step three: performing core stats
 
-LoLoPicker_stats.py -o <outputpath>
+LoLoPicker_stats.py -o outputpath
 
