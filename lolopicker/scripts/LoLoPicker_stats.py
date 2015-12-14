@@ -6,39 +6,41 @@ import numpy
 from scipy import stats
 from scipy.stats import binom
 from scipy.cluster.vq import kmeans2, whiten
+#from pylab import plot,show
+#import pylab
 
 def main(argv):
 	if len(sys.argv) < 2:
-		print 'usage: LoLoPicker.py -i <inputvariant> -c <base_covered> -o <outputpath>'
+		print 'usage: LoLoPicker_stats.py -o <outputpath>'
 		sys.exit(1)
 	try:
-		opts, args = getopt.getopt(argv,"hi:c:o:", ["help","inputvariant=", "base_covered=", "outputpath="])
+		opts, args = getopt.getopt(argv,"ho:", ["help","outputpath="])
 	except getopt.GetoptError:
-		print 'usage: LoLoPicker.py -i <inputvariant> -c <base_covered> -o <outputpath>'
+		print 'usage: LoLoPicker_stats.py -o <outputpath>'
 		sys.exit(2)
 	for opt, arg in opts:
-		basecov = 1500000000
+		basecov = 300000000
 		if opt == '-h':
-        	 	print 'usage: LoLoPicker.py -i <inputvariant> -o <outputpath>'
+        	 	print 'usage: LoLoPicker_stats.py -o <outputpath>'
          		sys.exit()
-		elif opt in ("-i", "--inputvariant"):
-			inputvariant = arg
       		elif opt in ("-o", "--outputpath"):
 			outputpath = arg
+			inputvariant = outputpath + "/control_stats.txt"
 			statsfile = outputpath+"/stats_calls.txt"
-		elif opt in ("-c", "--base_covered"):
-			basecov = int(arg)
+			rejectfile = outputpath+"/reject_calls.txt"
 			
-        return inputvariant, statsfile, basecov
+        return inputvariant, statsfile, rejectfile, basecov
 
 if __name__ == '__main__':
-        (inputvariant, statsfile, basecov) = main(sys.argv[1:])
-	
+        (inputvariant, statsfile, rejectfile, basecov) = main(sys.argv[1:])
+
 	stats_hash = {}
 	varfile = open(inputvariant)
+	next(varfile)
 	p_vals=[]
 	
-	ftemp = open(statsfile, 'w')
+	ftemp1 = open(statsfile, 'w')
+	ftemp2 = open(rejectfile, 'w')
 	for variant in ( raw.strip().split() for raw in varfile ):
 		c_alt_total = 0; c_ref_total = 0; SNP = 0
                 c_alf = []; c_alf_info = []
@@ -71,7 +73,6 @@ if __name__ == '__main__':
 
 			#perform kmeans clustering
 			if len(c_alf) > 3 and 'possible_SNP' not in str(stats_hash[k]):
-				#normal = stats.shapiro(c_alf)
 				while True:
 					km_results = kmeans2(c_alf, 2, iter=10, thresh=0)
 					km = km_results[0]; alfinfo =str(km_results[1])
@@ -84,7 +85,7 @@ if __name__ == '__main__':
 							break
 				if cluster1 > 0.1 and cluster2 > 0.1:
 					stats_hash[k] = str(t_refcount), str(t_alt_count), str(n_refcount), str(n_alt_count), "possible_SNP", float(p_value)
-				else:	
+				else:
 						#no obvious k clusters in the population, only use alf < 0.1 for binom.
 					if abs(cluster1 - cluster2) < 0.2:
 						l = 0	
@@ -118,7 +119,6 @@ if __name__ == '__main__':
 										c_alt_total = c_alt_total + int(c_alt)
 										c_ref_total = c_ref_total + int(c_ref)
 										l += 1
-
 			if 'possible_SNP' not in str(stats_hash[k]):
 				#perform binomial test.##
 				c_total = int(c_alt_total) + int(c_ref_total)
@@ -126,7 +126,7 @@ if __name__ == '__main__':
 				n_total = int(n_alt_count) + int(n_refcount)
 
 				c_alf_all = int(c_alt_total)/int(c_total)
-				if c_total < 5000 and c_alf_all == 0:
+				if c_alf_all == 0:
 					c_alf_all = 1/5000
 				if int(t_alt_count) >= 150:
 					p_value = 0
@@ -141,22 +141,33 @@ if __name__ == '__main__':
 					t_power = float(stats.binom_test(critical_val, int(t_total)+int(n_total), 0.3, 'greater'))
 					n_power = float(stats.binom_test(critical_val, int(t_total)+int(n_total), 0.5, 'greater'))	
 
-					if t_power < 0.99 or n_power < 0.99:
+					if t_power < 0.95 or n_power < 0.95:
 						stats_hash[k] = str(t_refcount), str(t_alt_count), str(n_refcount), str(n_alt_count), str(c_alt_total)+":"+str(c_total)+":uncovered", 1
 					else: 
 						stats_hash[k] = str(t_refcount), str(t_alt_count), str(n_refcount), str(n_alt_count), str(c_alt_total)+":"+str(c_total), float(p_value)	
 	
 	stats_sorted = sorted(stats_hash.items(), key=lambda kv: kv[1][5], reverse=True)
-	pre_p = 1
+	j=1; pre_p = 1
 
-	print >>ftemp, "chr\tpos\tref\talt\ttumor_ref_reads\ttumor_alt_reads\treference_ref_reads\treference_alt_reads\tcontrol_alf\tp_value\tcorred_p"
+	print >>ftemp1, "#chr\tpos\tref\talt\ttumor_ref_reads\ttumor_alt_reads\treference_ref_reads\treference_alt_reads\tcontrol_alf\tp_value\tcorrected_p"
+	print >>ftemp2, "#chr\tpos\tref\talt\ttumor_ref_reads\ttumor_alt_reads\treference_ref_reads\treference_alt_reads\tcontrol_alf\tp_value\tcorrected_p"
 	for var in stats_sorted:
 		p = var[1][-1]
 		q = float(p) * int(basecov)
+		tot = int(var[1][0])+int(var[1][1])
 		if q > 1:
 			q = 1
-		if q < 0.05:
-			results=(str(var[0])+"\t"+str(var[1][0])+"\t"+str(var[1][1])+"\t"+str(var[1][2])+"\t"+str(var[1][3])+"\t"+str(c_alf_all)+"\t"+str(p)+"\t"+str(q))
-			print >>ftemp, results
-	ftemp.close()
+
+		if tot!=0:
+			flt = int(var[1][1])/tot
+			if q < 0.05:
+				results=(str(var[0])+"\t"+str(var[1][0])+"\t"+str(var[1][1])+"\t"+str(flt)+"\t"+str(var[1][2])+"\t"+str(var[1][3])+"\t"+str(var[1][4])+"\t"+str(p)+"\t"+str(q)+"\t"+"real")
+				print >>ftemp1, results
+			else:
+				results=(str(var[0])+"\t"+str(var[1][0])+"\t"+str(var[1][1])+"\t"+str(flt)+"\t"+str(var[1][2])+"\t"+str(var[1][3])+"\t"+str(var[1][4])+"\t"+str(p)+"\t"+str(q)+"\t"+"reject")
+				print >>ftemp2, results
+	ftemp1.close()
+	ftemp2.close()
+
+
 

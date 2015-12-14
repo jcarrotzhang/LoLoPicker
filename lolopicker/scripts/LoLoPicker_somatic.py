@@ -7,16 +7,16 @@ import pysamstats
 
 def main(argv):
 	if len(sys.argv) < 5:
-		print 'usage: LVpicker.py -t <tumorfile> -n <normalfile> -r <reference> -b <bedfile> -o <outputpath>'
+		print 'usage: LoLoPicker_somatic.py -t <tumorfile> -n <normalfile> -r <reference> -b <bedfile> -o <outputpath>'
 		sys.exit(1)
 	try:
 		opts, args = getopt.getopt(argv,"hr:b:t:n:o:", ["help","tumorfile=", "normalfile=", "reference=", "bedfile=", "outputpath="])
 	except getopt.GetoptError:
-		print 'usage: LVpicker.py -t <tumorfile> -n <normalfile> -r <reference> -b <bedfile> -o <outputpath>'
+		print 'usage: LoLoPicker_somatic.py -t <tumorfile> -n <normalfile> -r <reference> -b <bedfile> -o <outputpath>'
 		sys.exit(2)
 	for opt, arg in opts:
 		if opt == '-h':
-        	 	print 'usage: LVpicker.py -t <tumorfile> -n <normalfile> -r <reference> -b <bedfile> -o <outputpath>'
+        	 	print 'usage: LoLoPicker_somatic.py -t <tumorfile> -n <normalfile> -r <reference> -b <bedfile> -o <outputpath>'
          		sys.exit()
 		elif opt in ("-t", "--tumorfile"):
 			tumorfile = arg
@@ -145,7 +145,6 @@ if __name__ == '__main__':
 								if t_alt_A > 2:
 									if (all(5 >= i for i in altReadPosS_f_A) and all(5 >= i for i in altReadPosS_r_A)) or (all(5 >= i for i in altReadPosE_f_A) and all(5 >= i for i in altReadPosE_r_A)):
 										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
-										#print chr, pos, altReadPosS_r_A, altReadPosS_f_A, altReadPosE_f_A, altReadPosE_r_A, "A", "clustered_pos"
 									else:
 										(n_alt_A, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "A")
 										if n_alt_A < 2 and n_refcount >= 5:
@@ -155,7 +154,6 @@ if __name__ == '__main__':
 								elif t_alt_T > 2: 
 									if (all(5 >= i for i in altReadPosS_f_T) and all(5 >= i for i in altReadPosS_r_T)) or (all(5 >= i for i in altReadPosE_f_T) and all(5 >= i for i in altReadPosE_r_T)):
 										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
-										#print chr, pos, altReadPosS_r_T, altReadPosS_f_T, altReadPosE_f_T, altReadPosE_r_T, "T", "clustered_pos"
 									else:
 										(n_alt_T, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "T")	
 										if n_alt_T < 2 and n_refcount >= 5:
@@ -165,7 +163,6 @@ if __name__ == '__main__':
 								elif t_alt_G > 2: 
 									if (all(5 >= i for i in altReadPosS_f_G) and all(5 >= i for i in altReadPosS_r_G)) or (all(5 >= i for i in altReadPosE_f_G) and all(5 >= i for i in altReadPosE_r_G)):
 										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
-										#print chr, pos, altReadPosS_r_G, altReadPosS_f_G, altReadPosE_f_G, altReadPosE_r_G, "G", "clustered_pos"
 									else:
 										(n_alt_G, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "G")
 										if n_alt_G < 2 and n_refcount >=5:
@@ -175,7 +172,6 @@ if __name__ == '__main__':
 								elif t_alt_C > 2:
 									if (all(5 >= i for i in altReadPosS_f_C) and all(5 >= i for i in altReadPosS_r_C)) or (all(5 >= i for i in altReadPosE_f_C) and all(5 >= i for i in altReadPosE_r_C)):
 							 			raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
-                                                                                #print chr, pos, altReadPosS_r_C, altReadPosS_f_C, altReadPosE_f_C, altReadPosE_r_C, "G", "clustered_pos"
 									else:
 										(n_alt_C, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "C")
 										if n_alt_C < 2 and n_refcount >=5:

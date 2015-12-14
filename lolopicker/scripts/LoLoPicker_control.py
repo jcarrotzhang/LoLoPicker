@@ -5,23 +5,22 @@ import re
 import pysam
 import multiprocessing as mp
 from multiprocessing import Pool
-import time
 
 start_time = time.time()
 
 def main(argv):
 	if len(sys.argv) < 3:
-		print 'usage: LVpicker.py -l <samplelist> -r <reference> -n <thread> -o <outputpath>'
+		print 'usage: LoLoPicker_control.py -l <samplelist> -r <reference> -n <thread> -o <outputpath>'
 		sys.exit(1)
 	try:
 		opts, args = getopt.getopt(argv,"hl:r:n:o:", ["help","samplelist=", "reference=", "thread=", "outputpath="])
 	except getopt.GetoptError:
-		print 'usage: LVpicker.py -l <samplelist> -r <reference> -n <thread> -o <outputpath>'
+		print 'usage: LoLoPicker_control.py -l <samplelist> -r <reference> -n <thread> -o <outputpath>'
 		sys.exit(2)
 	for opt, arg in opts:
 		thread = 1
 		if opt == '-h':
-        	 	print 'usage: LVpicker.py -l <samplelist> -r <reference> -n <thread> -o <outputpath>'
+        	 	print 'usage: LoLoPicker_control.py -l <samplelist> -r <reference> -n <thread> -o <outputpath>'
          		sys.exit()
 		elif opt in ("-l", "--samplelist"):
 			samplelist = arg
@@ -131,9 +130,6 @@ if __name__ == '__main__':
 	              
 	vartemp.close()
 	ftemp.close()
-        print ("--- %s seconds ---" % (time.time() - start_time))
-
-
 
 
 #
