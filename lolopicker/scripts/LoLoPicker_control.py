@@ -99,6 +99,7 @@ if __name__ == '__main__':
 	inputlist.close()
 
 	vartemp = open(varfile)
+	next(vartemp)
 	for j in ( raw.strip().split() for raw in vartemp ):
 		(chr, pos, ref, alt, t_refcount, t_alt_count, n_refcount, n_alt_count, judge) = j 
 		if judge == "pass_to_test":
