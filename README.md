@@ -1,5 +1,10 @@
 # LoLoPicker
 
+#Installation
+git clone https://github.com/jcarrotzhang/LoLoPicker
+cd LoLoPicker
+python setup.py install 
+
 #Step one: calling raw, somatic variants using matched tumor/normal 
 
 LoLoPicker_somatic.py -t tumorfile -n normalfile -r reference -b bedfile -o outputpath
