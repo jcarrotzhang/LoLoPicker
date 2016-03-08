@@ -4,6 +4,8 @@
 ######git clone https://github.com/jcarrotzhang/LoLoPicker 
 ######cd LoLoPicker 
 ######python setup.py install 
+######dependencies pysam pysamstats
+
 
 
 #Step one: calling raw, somatic variants using matched tumor/normal 
