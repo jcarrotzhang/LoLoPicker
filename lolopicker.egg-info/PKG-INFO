@@ -1,8 +1,8 @@
 Metadata-Version: 1.0
 Name: lolopicker
-Version: 0.1
+Version: 0.3
 Summary: somatic mutation caller
-Home-page: http://github.com/jcarrotzhang/lolopicker
+Home-page: http://github.com/jcarrotzhang/LoLoPicker
 Author: Jian Carrot-Zhang
 Author-email: jian.carrot.zhang@gmail.com
 License: McGill

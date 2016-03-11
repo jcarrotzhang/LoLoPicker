@@ -1,4 +1,7 @@
 setup.py
+lolopicker/LoLoPicker_control.py
+lolopicker/LoLoPicker_somatic.py
+lolopicker/LoLoPicker_stats.py
 lolopicker/__init__.py
 lolopicker.egg-info/PKG-INFO
 lolopicker.egg-info/SOURCES.txt

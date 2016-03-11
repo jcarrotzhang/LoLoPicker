@@ -7,12 +7,12 @@ import pysamstats
 
 def main(argv):
 	if len(sys.argv) < 5:
-		print 'usage: LoLoPicker_somatic.py -t <tumorfile> -n <normalfile> -r <reference> -b <bedfile> -o <outputpath>'
+		print 'usage: python LoLoPicker_somatic.py -t <tumorfile> -n <normalfile> -r <reference> -b <bedfile> -o <outputpath>'
 		sys.exit(1)
 	try:
 		opts, args = getopt.getopt(argv,"hr:b:t:n:o:", ["help","tumorfile=", "normalfile=", "reference=", "bedfile=", "outputpath="])
 	except getopt.GetoptError:
-		print 'usage: LoLoPicker_somatic.py -t <tumorfile> -n <normalfile> -r <reference> -b <bedfile> -o <outputpath>'
+		print 'usage: python LoLoPicker_somatic.py -t <tumorfile> -n <normalfile> -r <reference> -b <bedfile> -o <outputpath>'
 		sys.exit(2)
 	for opt, arg in opts:
 		if opt == '-h':
@@ -127,7 +127,7 @@ if __name__ == '__main__':
 	cov = 0
 	ftemp = open(tempfile, 'w')	
 	print >>ftemp, "chr\tpos\tref\talt\tt_ref\tt_alt\tn_ref\tn_alt\tjudge"
-
+	print "calling raw variants..."
 	for bedline in ( raw.strip().split() for raw in open(bed)):
  	     	for rec in pysamstats.stat_variation(t_samfile, ref, chrom=str(bedline[0]), start=int(bedline[1]), end=int(bedline[2])):
 			if rec['reads_pp'] > 4:
@@ -147,7 +147,7 @@ if __name__ == '__main__':
 										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
 										(n_alt_A, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "A")
-										if n_alt_A < 2 and n_refcount >= 5:
+										if n_alt_A < 2 and n_refcount >= 3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"pass_to_test")
 										else:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"possible_germline")
@@ -156,7 +156,7 @@ if __name__ == '__main__':
 										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
 										(n_alt_T, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "T")	
-										if n_alt_T < 2 and n_refcount >= 5:
+										if n_alt_T < 2 and n_refcount >= 3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"pass_to_test")
 										else: 
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"possible_germline")
@@ -165,7 +165,7 @@ if __name__ == '__main__':
 										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
 										(n_alt_G, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "G")
-										if n_alt_G < 2 and n_refcount >=5:
+										if n_alt_G < 2 and n_refcount >=3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"pass_to_test")
 										else:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"possible_germline")
@@ -174,7 +174,7 @@ if __name__ == '__main__':
 							 			raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
 										(n_alt_C, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "C")
-										if n_alt_C < 2 and n_refcount >=5:
+										if n_alt_C < 2 and n_refcount >=3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"pass_to_test")
 										else: 
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"possible_germline")
@@ -186,6 +186,7 @@ if __name__ == '__main__':
 							print >>ftemp, raw_calls
 
 	ftemp.close()
+	print "Done calling raw variants!"
 
 if __name__ == '__main__':
         main(sys.argv[1:])

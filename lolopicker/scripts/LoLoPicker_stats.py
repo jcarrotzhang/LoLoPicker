@@ -168,6 +168,6 @@ if __name__ == '__main__':
 				print >>ftemp2, results
 	ftemp1.close()
 	ftemp2.close()
-
+	print "Done LoLoPicker!"
 
 

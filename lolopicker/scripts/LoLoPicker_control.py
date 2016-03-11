@@ -6,8 +6,6 @@ import pysam
 import multiprocessing as mp
 from multiprocessing import Pool
 
-start_time = time.time()
-
 def main(argv):
 	if len(sys.argv) < 3:
 		print 'usage: LoLoPicker_control.py -l <samplelist> -r <reference> -n <thread> -o <outputpath>'
@@ -131,6 +129,6 @@ if __name__ == '__main__':
 	              
 	vartemp.close()
 	ftemp.close()
-
+	print "Done control panel inspection!"
 
 #
