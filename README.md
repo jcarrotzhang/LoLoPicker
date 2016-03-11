@@ -4,7 +4,7 @@
 ######git clone https://github.com/jcarrotzhang/LoLoPicker 
 ######cd LoLoPicker 
 ######python setup.py install 
-######dependencies pysam (>=0.2.8) pysamstats
+######dependencies pysam (>=0.8.4) pysamstats
 
 
 
