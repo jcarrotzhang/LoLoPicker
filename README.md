@@ -5,6 +5,7 @@
 ######cd LoLoPicker
 ######python setup.py install
 ######dependencies pysam (>=0.8.4) pysamstats
+######Please note that LoLoPicker is no longer available on PyPI
 
 #Step one: calling raw, somatic variants using matched tumor/normal
 
