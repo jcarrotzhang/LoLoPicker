@@ -9,14 +9,19 @@
 
 #Step one: calling raw, somatic variants using matched tumor/normal
 
-python LoLoPicker_somatic.py -t tumorfile -n normalfile -r reference -b bedfile -o outputpath
+python LoLoPicker_somatic.py -t tumorfile.bam -n normalfile.bam -r reference.fa -b interval.bed (e.g. CCDS in bed format) -o outputpath
 
 #Step two: inspecting your control cohort
 
-python LoLoPicker_control.py -l samplelist -r reference -n thread -o outputpath
+python LoLoPicker_control.py -l samplelist.txt -r reference.fa -n thread -o outputpath
+
+##### please provide your control panel in samplelist.txt using the following tab-delimited format:
+##### Bam_file_of_each_control  control_sampleID
 
 #Step three: performing core stats
 
 python LoLoPicker_stats.py -o outputpath
+
+#####For analyzing whole-genome sequencing data, please use the -b option and split your job by genomic intervals (e.g. chromosomes). 
 
 
