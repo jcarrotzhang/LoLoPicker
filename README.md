@@ -16,7 +16,7 @@ python LoLoPicker_somatic.py -t tumor.bam -n normal.bam -r reference.fa -b inter
 python LoLoPicker_control.py -l samplelist.txt -r reference.fa -n thread -o outputpath
 
 ##### please provide your control panel in samplelist.txt using the following tab-delimited format:
-##### Bam_file_of_each_control                   control_sampleID
+##### Bam_file_of_each_control          \t         control_sampleID
 
 #Step three: performing core stats
 
