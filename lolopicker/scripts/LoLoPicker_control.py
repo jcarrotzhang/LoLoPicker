@@ -16,7 +16,6 @@ def main(argv):
 		print 'usage: LoLoPicker_control.py -l <samplelist> -r <reference> -n <thread> -o <outputpath>'
 		sys.exit(2)
 	for opt, arg in opts:
-		thread = 1
 		if opt == '-h':
         	 	print 'usage: LoLoPicker_control.py -l <samplelist> -r <reference> -n <thread> -o <outputpath>'
          		sys.exit()
