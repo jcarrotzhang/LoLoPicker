@@ -10,16 +10,16 @@ from scipy.cluster.vq import kmeans2, whiten
 #import pylab
 
 def main(argv):
+	basecov = 300000000
 	if len(sys.argv) < 2:
 		print 'usage: LoLoPicker_stats.py -o <outputpath>'
 		sys.exit(1)
 	try:
-		opts, args = getopt.getopt(argv,"ho:", ["help","outputpath="])
+		opts, args = getopt.getopt(argv,"ho:s:g", ["help","outputpath=","intervalsize=", "genome="])
 	except getopt.GetoptError:
 		print 'usage: LoLoPicker_stats.py -o <outputpath>'
 		sys.exit(2)
 	for opt, arg in opts:
-		basecov = 300000000
 		if opt == '-h':
         	 	print 'usage: LoLoPicker_stats.py -o <outputpath>'
          		sys.exit()
@@ -28,7 +28,11 @@ def main(argv):
 			inputvariant = outputpath + "/control_stats.txt"
 			statsfile = outputpath+"/stats_calls.txt"
 			rejectfile = outputpath+"/reject_calls.txt"
-			
+		elif opt in ("-s", "--intervalsize"):
+			basecov = arg
+		elif opt in ("-g", "--genome");
+			basecov = 30000000000
+
         return inputvariant, statsfile, rejectfile, basecov
 
 if __name__ == '__main__':
