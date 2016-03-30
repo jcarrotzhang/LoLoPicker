@@ -10,12 +10,12 @@
 #Step one: calling raw, somatic variants using matched tumor/normal
 
 python LoLoPicker_somatic.py -t tumor.bam -n normal.bam -r reference.fa -b interval.bed (e.g. CCDS_in_bed_format) -o outputpath 
-(options: --basequality only_count_reads_with_base_quality_above_cutoff --mappingquality only_count_reads_with_mapping_quality_above_cutoff --normalalteredreads keep_variants_where_number_of_altered_reads_in_normal_less_than_cutoff)
+#####(options: --basequality only_count_reads_with_base_quality_above_cutoff --mappingquality only_count_reads_with_mapping_quality_above_cutoff --normalalteredreads keep_variants_where_number_of_altered_reads_in_normal_less_than_cutoff)
 
 #Step two: inspecting your control cohort
 
 python LoLoPicker_control.py -l samplelist.txt -r reference.fa -o outputpath
-(options: --basequality --mappingquality -n thread)
+#####(options: --basequality --mappingquality -n thread)
 
 #####please provide your control panel in samplelist.txt using the following tab-delimited format:
 ######Bam_file_of_each_control      \t      control_sampleID
