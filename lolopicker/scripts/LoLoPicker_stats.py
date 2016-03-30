@@ -124,6 +124,20 @@ if __name__ == '__main__':
 				c_total = int(c_alt_total) + int(c_ref_total)
 				t_total = int(t_alt_count) + int(t_refcount)
 				n_total = int(n_alt_count) + int(n_refcount)
+<<<<<<< HEAD
+		
+				if c_total == 0:
+					c_alf_all = 1/5000
+				else:
+					c_alf_all = int(c_alt_total)/int(c_total)
+				if c_alf_all == 0:
+					c_alf_all = 1/5000
+				elif int(t_alt_count) >= 150:
+					p_value = 0
+				else:
+					pro = 0
+					critical_val = 0
+=======
 
 				c_alf_all = int(c_alt_total)/int(c_total)
 				if c_alf_all == 0:
@@ -132,6 +146,7 @@ if __name__ == '__main__':
 					p_value = 0
 				else:
 					pro = 0
+>>>>>>> 833fc646b744f63e74d6888fc876e55de3fe2c0b
 					p_value = stats.binom_test(t_alt_count, t_total, c_alf_all, 'greater')
 					for i in range(0, int(t_total)+int(n_total)):
 						pro = pro + stats.binom.pmf(i, int(t_total)+int(n_total), c_alf_all)

@@ -1,0 +1,3 @@
+PATH/control1.bam	sample1
+PATH/control2.bam	sample2
+PATH/control3.bam	sample3
