@@ -24,7 +24,7 @@ python LoLoPicker_control.py -l samplelist.txt -r reference.fa -o outputpath
 
 python LoLoPicker_stats.py -o outputpath 
 
-######(options: --basecov --genome)
+######(options: --genome for_analyzing_WGS_data)
 
 #####For analyzing whole-genome sequencing data, please split your job by genomic intervals (e.g. chromosomes) and merge all your control_stats.txt files before going to step three.
 
