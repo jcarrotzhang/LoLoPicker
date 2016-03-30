@@ -134,7 +134,7 @@ if __name__ == '__main__':
 	foundReg=[];	raws=[]
 	cov = 0
 	ftemp = open(tempfile, 'w')	
-	print >>ftemp, "chr\tpos\tref\talt\tt_ref\tt_alt\tn_ref\tn_alt\tjudge"
+	print >>ftemp, "#chr\tpos\tref\talt\tt_ref\tt_alt\tn_ref\tn_alt\tjudge"
 	print "calling raw variants..."
 	for bedline in ( raw.strip().split() for raw in open(bed)):
  	     	for rec in pysamstats.stat_variation(t_samfile, ref, chrom=str(bedline[0]), start=int(bedline[1]), end=int(bedline[2])):
