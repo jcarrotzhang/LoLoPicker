@@ -8,12 +8,13 @@ import pysamstats
 def main(argv):
 	base_quality = 30
 	mapping_quality = 30
-	normal_alt_cutoff = 2	
+	normal_alt_cutoff = 2
+	normal_alf_cutoff = 0	
 	if len(sys.argv) < 5:
 		print 'usage: python LoLoPicker_somatic.py -t <tumor.bam> -n <normal.bam> -r <reference.fa> -b <intervals.bed> -o <outputpath>'
 		sys.exit(1)
 	try:
-		opts, args = getopt.getopt(argv,"ht:n:r:b:o:B:m:N", ["help","tumorfile=", "normalfile=", "reference=", "bedfile=", "outputpath=", "basequality=", "mappingquality=", "normalalteredreads="])
+		opts, args = getopt.getopt(argv,"ht:n:r:b:o:B:m:f:c", ["help","tumorfile=", "normalfile=", "reference=", "bedfile=", "outputpath=", "basequality=", "mappingquality=", "normalalteredratio=", "normalalteredreads="])
 	except getopt.error:
 		print 'usage: python LoLoPicker_somatic.py -t <tumor.bam> -n <normal.bam> -r <reference.fa> -b <intervals.bed> -o <outputpath>'
 		sys.exit(2)
@@ -35,13 +36,15 @@ def main(argv):
                         base_quality = arg
 		elif opt in ("-m", "--mappingquality"):
                         mapping_quality = arg
-		elif opt in ("-N", "--normalalteredreads"):
+		elif opt in ("-f", "--normalalteredratio"):
+			normal_alf_cutoff = arg
+		elif opt in ("-c", "--normalalteredreads"):
                         normal_alt_cutoff = arg
 
-	return tumorfile, normalfile, reference, bed, outputpath, base_quality, mapping_quality, normal_alt_cutoff 
+	return tumorfile, normalfile, reference, bed, outputpath, base_quality, mapping_quality, normal_alf_cutoff, normal_alt_cutoff 
 
 if __name__ == '__main__':
-        (tumorfile, normalfile, reference, bed, outputpath, base_quality, mapping_quality, normal_alt_cutoff) = main(sys.argv[1:])
+        (tumorfile, normalfile, reference, bed, outputpath, base_quality, mapping_quality, normal_alf_cutoff, normal_alt_cutoff) = main(sys.argv[1:])
         ref = pysam.FastaFile(reference)
 	t_samfile = pysam.AlignmentFile(tumorfile)
 	n_samfile = pysam.AlignmentFile(normalfile)
@@ -158,7 +161,7 @@ if __name__ == '__main__':
 										if (n_refcount + n_alt_A) < 3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"germline_uncovered")
 										else: 
-											if n_alt_A < normal_alt_cutoff or n_alt_A/(n_refcount + n_alt_A) < 0.1:
+											if n_alt_A < normal_alt_cutoff or n_alt_A/(n_refcount + n_alt_A) < normal_alf_cutoff:
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"pass_to_test")
 											else:
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"possible_germline")
@@ -170,7 +173,7 @@ if __name__ == '__main__':
 										if (n_refcount + n_alt_T) < 3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"germline_uncovered")
 										else:
-											if n_alt_T < normal_alt_cutoff or n_alt_T/(n_refcount + n_alt_T) < 0.1:
+											if n_alt_T < normal_alt_cutoff or n_alt_T/(n_refcount + n_alt_T) < normal_alf_cutoff:
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"pass_to_test")
 											else: 
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"possible_germline")
@@ -182,7 +185,7 @@ if __name__ == '__main__':
 										if (n_refcount + n_alt_G) < 3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"germline_uncovered")
 										else:
-											if n_alt_G < normal_alt_cutoff or n_alt_G/(n_refcount + n_alt_G) < 0.1:
+											if n_alt_G < normal_alt_cutoff or n_alt_G/(n_refcount + n_alt_G) < normal_alf_cutoff:
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"pass_to_test")
 											else:
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"possible_germline")
@@ -194,7 +197,7 @@ if __name__ == '__main__':
 										if (n_refcount + n_alt_C) < 3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"germline_uncovered")
 										else:
-											if n_alt_C < normal_alt_cutoff or n_alt_C/(n_refcount + n_alt_C) < 0.1:
+											if n_alt_C < normal_alt_cutoff or n_alt_C/(n_refcount + n_alt_C) < normal_alf_cutoff:
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"pass_to_test")
 											else: 
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"possible_germline")
