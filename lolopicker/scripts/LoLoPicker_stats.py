@@ -33,7 +33,7 @@ def main(argv):
 		elif opt in ("-g", "--genome"):
 			basecov = 30000000000
 
-        return inputvariant, statsfile, rejectfile, basecov
+        return inputvariant, statsfile, rejectfile, int(basecov)
 
 if __name__ == '__main__':
         (inputvariant, statsfile, rejectfile, basecov) = main(sys.argv[1:])
@@ -76,18 +76,18 @@ if __name__ == '__main__':
 						c_alf_info.append([c_alt, c_ref, c_sampleID])
 
 			#perform kmeans clustering
-			if len(c_alf) > 3 and 'possible_SNP' not in str(stats_hash[k]):
+			if (len(c_alf) > 3) and ('possible_SNP' not in str(stats_hash[k])):
 				while True:
 					km_results = kmeans2(c_alf, 2, iter=10, thresh=0)
 					km = km_results[0]; alfinfo =str(km_results[1])
 					cluster1 = km[0]; cluster2 = km[1]
 					if cluster1 > cluster2:
-						if cluster1 < 1 and cluster2 > 0:
+						if (cluster1 < 1) and (cluster2 > 0):
 							break
 					if cluster1 < cluster2:
-						if cluster2 < 1 and cluster1 > 0: 
+						if (cluster2 < 1) and (cluster1 > 0): 
 							break
-				if cluster1 > 0.1 and cluster2 > 0.1:
+				if (cluster1 > 0.1) and (cluster2 > 0.1):
 					stats_hash[k] = str(t_refcount), str(t_alt_count), str(n_refcount), str(n_alt_count), "possible_SNP", float(p_value)
 				else:
 						#no obvious k clusters in the population, only use alf < 0.1 for binom.

@@ -33,10 +33,8 @@ def main(argv):
 		elif opt in ("-B", "--basequality"):
                         base_quality = arg
                 elif opt in ("-m", "--mappingquality"):
-                        mapping_quality = arg
-		
-		
-	return samplelist, reference, thread, outputpath, base_quality, mapping_quality
+                        mapping_quality = arg		
+	return samplelist, reference, thread, outputpath, int(base_quality), int(mapping_quality)
 
 if __name__ == '__main__':
         (samplelist, reference, thread, outputpath, base_quality, mapping_quality) = main(sys.argv[1:])
@@ -52,7 +50,7 @@ if __name__ == '__main__':
 			for pileupread in pileupcolumn.pileups:
 				if pileupread.alignment.is_proper_pair and not pileupread.alignment.is_duplicate:
 					if not pileupread.is_del and not pileupread.is_refskip:
-						if pileupread.alignment.mapping_quality >= mapping_quality and pileupread.alignment.query_qualities[pileupread.query_position] >= base_quality:
+						if (pileupread.alignment.mapping_quality >= mapping_quality) and (pileupread.alignment.query_qualities[pileupread.query_position] >= base_quality):
 							altseq = pileupread.alignment.query_sequence[pileupread.query_position]	
 							try:
 								foundReadName.index(pileupread.alignment.query_name)

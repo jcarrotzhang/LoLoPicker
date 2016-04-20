@@ -8,13 +8,15 @@ import pysamstats
 def main(argv):
 	base_quality = 30
 	mapping_quality = 30
+	tumor_alt_cutoff = 2
+	tumor_alf_cutoff = 0
 	normal_alt_cutoff = 2
 	normal_alf_cutoff = 0	
 	if len(sys.argv) < 5:
 		print 'usage: python LoLoPicker_somatic.py -t <tumor.bam> -n <normal.bam> -r <reference.fa> -b <intervals.bed> -o <outputpath>'
 		sys.exit(1)
 	try:
-		opts, args = getopt.getopt(argv,"ht:n:r:b:o:B:m:f:c", ["help","tumorfile=", "normalfile=", "reference=", "bedfile=", "outputpath=", "basequality=", "mappingquality=", "normalalteredratio=", "normalalteredreads="])
+		opts, args = getopt.getopt(argv,"ht:n:r:b:o:B:m:f:c:F:C", ["help","tumorfile=", "normalfile=", "reference=", "bedfile=", "outputpath=", "basequality=", "mappingquality=", "normalalteredratio=", "normalalteredreads=", "tumoralteredratio=", "tumoralteredreads="])
 	except getopt.error:
 		print 'usage: python LoLoPicker_somatic.py -t <tumor.bam> -n <normal.bam> -r <reference.fa> -b <intervals.bed> -o <outputpath>'
 		sys.exit(2)
@@ -40,12 +42,16 @@ def main(argv):
 			normal_alf_cutoff = arg
 		elif opt in ("-c", "--normalalteredreads"):
                         normal_alt_cutoff = arg
-
-	return tumorfile, normalfile, reference, bed, outputpath, base_quality, mapping_quality, normal_alf_cutoff, normal_alt_cutoff 
+		elif opt in ("-F", "--tumoralteredratio"):
+			tumor_alf_cutoff = arg
+		elif opt in ("-c", "--tumoralteredreads"):
+			tumor_alt_cutoff = arg
+	return tumorfile, normalfile, reference, bed, outputpath, int(base_quality), int(mapping_quality), float(normal_alf_cutoff), int(normal_alt_cutoff), int(tumor_alt_cutoff), float(tumor_alf_cutoff) 
 
 if __name__ == '__main__':
-        (tumorfile, normalfile, reference, bed, outputpath, base_quality, mapping_quality, normal_alf_cutoff, normal_alt_cutoff) = main(sys.argv[1:])
-        ref = pysam.FastaFile(reference)
+        (tumorfile, normalfile, reference, bed, outputpath, base_quality, mapping_quality, normal_alf_cutoff, normal_alt_cutoff, tumor_alt_cutoff, tumor_alf_cutoff) = main(sys.argv[1:])
+    	print tumor_alt_cutoff, tumor_alf_cutoff
+	ref = pysam.FastaFile(reference)
 	t_samfile = pysam.AlignmentFile(tumorfile)
 	n_samfile = pysam.AlignmentFile(normalfile)
 	tempfile = outputpath+"/raw_somatic_varants.txt"
@@ -142,7 +148,7 @@ if __name__ == '__main__':
 	for bedline in ( raw.strip().split() for raw in open(bed)):
  	     	for rec in pysamstats.stat_variation(t_samfile, ref, chrom=str(bedline[0]), start=int(bedline[1]), end=int(bedline[2])):
 			if rec['reads_pp'] > 4:
-				if rec['mismatches_pp'] > 2 and rec['insertions'] <= 3 and rec['deletions'] <= 3:
+				if (rec['mismatches_pp'] > 2) and (rec['insertions'] <= 3) and (rec['deletions'] <= 3):
 					chr = rec['chrom']; pos = rec['pos'];
 					ref_seq = rec['ref']
 					for t_columns in t_samfile.pileup(chr, int(pos), int(pos)+1, truncate=True):
@@ -153,7 +159,7 @@ if __name__ == '__main__':
 							(t_alt_A, t_alt_C, t_alt_G, t_alt_T, t_refcount, altReadPosE_f_A, altReadPosE_r_A, altReadPosE_f_G, altReadPosE_r_G, altReadPosE_f_C, altReadPosE_r_C, altReadPosE_f_T, altReadPosE_r_T, altReadPosS_f_A, altReadPosS_r_A, altReadPosS_f_G, altReadPosS_r_G, altReadPosS_f_C, altReadPosS_r_C, altReadPosS_f_T, altReadPosS_r_T) = process_reads(t_columns, t_columns.pos, ref_seq, "Y")
 							totalcount = t_refcount + t_alt_A + t_alt_G + t_alt_C + t_alt_T
 							if totalcount > 4:
-								if t_alt_A > 2:
+								if (t_alt_A > tumor_alt_cutoff) and ((t_alt_A/totalcount) > tumor_alf_cutoff):
 									if (all(5 >= i for i in altReadPosS_f_A) and all(5 >= i for i in altReadPosS_r_A)) or (all(5 >= i for i in altReadPosE_f_A) and all(5 >= i for i in altReadPosE_r_A)):
 										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
@@ -161,11 +167,11 @@ if __name__ == '__main__':
 										if (n_refcount + n_alt_A) < 3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"germline_uncovered")
 										else: 
-											if n_alt_A < normal_alt_cutoff or n_alt_A/(n_refcount + n_alt_A) < normal_alf_cutoff:
+											if (n_alt_A < normal_alt_cutoff) or ((n_alt_A/(n_refcount + n_alt_A)) < normal_alf_cutoff):
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"pass_to_test")
 											else:
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"possible_germline")
-								elif t_alt_T > 2: 
+								elif (t_alt_T > tumor_alt_cutoff) and ((t_alt_T/totalcount) > tumor_alf_cutoff): 
 									if (all(5 >= i for i in altReadPosS_f_T) and all(5 >= i for i in altReadPosS_r_T)) or (all(5 >= i for i in altReadPosE_f_T) and all(5 >= i for i in altReadPosE_r_T)):
 										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
@@ -173,11 +179,11 @@ if __name__ == '__main__':
 										if (n_refcount + n_alt_T) < 3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"germline_uncovered")
 										else:
-											if n_alt_T < normal_alt_cutoff or n_alt_T/(n_refcount + n_alt_T) < normal_alf_cutoff:
+											if (n_alt_T < normal_alt_cutoff) or ((n_alt_T/(n_refcount + n_alt_T)) < normal_alf_cutoff):
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"pass_to_test")
 											else: 
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"possible_germline")
-								elif t_alt_G > 2: 
+								elif (t_alt_G > tumor_alt_cutoff) and ((t_alt_G/totalcount) > tumor_alf_cutoff): 
 									if (all(5 >= i for i in altReadPosS_f_G) and all(5 >= i for i in altReadPosS_r_G)) or (all(5 >= i for i in altReadPosE_f_G) and all(5 >= i for i in altReadPosE_r_G)):
 										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
@@ -185,11 +191,11 @@ if __name__ == '__main__':
 										if (n_refcount + n_alt_G) < 3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"germline_uncovered")
 										else:
-											if n_alt_G < normal_alt_cutoff or n_alt_G/(n_refcount + n_alt_G) < normal_alf_cutoff:
+											if (n_alt_G < normal_alt_cutoff) or ((n_alt_G/(n_refcount + n_alt_G)) < normal_alf_cutoff):
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"pass_to_test")
 											else:
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"possible_germline")
-								elif t_alt_C > 2:
+								elif (t_alt_C > tumor_alt_cutoff) and ((t_alt_C/totalcount) > tumor_alf_cutoff):
 									if (all(5 >= i for i in altReadPosS_f_C) and all(5 >= i for i in altReadPosS_r_C)) or (all(5 >= i for i in altReadPosE_f_C) and all(5 >= i for i in altReadPosE_r_C)):
 							 			raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
@@ -197,7 +203,7 @@ if __name__ == '__main__':
 										if (n_refcount + n_alt_C) < 3:
 											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"germline_uncovered")
 										else:
-											if n_alt_C < normal_alt_cutoff or n_alt_C/(n_refcount + n_alt_C) < normal_alf_cutoff:
+											if (n_alt_C < normal_alt_cutoff) or ((n_alt_C/(n_refcount + n_alt_C)) < normal_alf_cutoff):
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"pass_to_test")
 											else: 
 												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"possible_germline")
