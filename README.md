@@ -13,7 +13,11 @@
 #Step one: calling raw, somatic variants using matched tumor/normal
 
 python LoLoPicker_somatic.py -t tumor.bam -n normal.bam -r reference.fa -b interval.bed (e.g. CCDS_in_bed_format) -o outputpath 
-######(options: --basequality only_count_reads_with_base_quality_above_cutoff --mappingquality only_count_reads_with_mapping_quality_above_cutoff --tumoralteredreads --normalalteredreads keep_variants_where_number_of_altered_reads_in_normal_less_than_cutoff)
+######(options: 
+######--basequality only_count_reads_with_base_quality_above_cutoff 
+######--mappingquality only_count_reads_with_mapping_quality_above_cutoff 
+######--tumoralteredreads keep_variants_where_number_of_altered_reads_in_tumor_more_than_cutoff
+######--normalalteredreads keep_variants_where_number_of_altered_reads_in_normal_less_than_cutoff)
 
 #Step two: inspecting your control cohort
 
