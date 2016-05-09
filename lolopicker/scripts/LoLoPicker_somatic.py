@@ -50,7 +50,7 @@ def main(argv):
 
 if __name__ == '__main__':
         (tumorfile, normalfile, reference, bed, outputpath, base_quality, mapping_quality, normal_alf_cutoff, normal_alt_cutoff, tumor_alt_cutoff, tumor_alf_cutoff) = main(sys.argv[1:])
-    	print tumor_alt_cutoff, tumor_alf_cutoff
+    	#print tumor_alt_cutoff, tumor_alf_cutoff
 	ref = pysam.FastaFile(reference)
 	t_samfile = pysam.AlignmentFile(tumorfile)
 	n_samfile = pysam.AlignmentFile(normalfile)
