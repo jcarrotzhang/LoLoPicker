@@ -26,9 +26,9 @@ setup(name='lolopicker',
       author='Jian Carrot-Zhang',
       author_email='jian.carrot.zhang@gmail.com',
       license='McGill',
-      scripts=[ 'scripts/LoLoPicker_control.py',
-		'scripts/LoLoPicker_stats.py',
-        	'scripts/LoLoPicker_somatic.py'
+      scripts=[ 'lolopicker/scripts/LoLoPicker_control.py',
+		'lolopicker/scripts/LoLoPicker_stats.py',
+        	'lolopicker/scripts/LoLoPicker_somatic.py'
     		],
       packages=['lolopicker'],
       install_requires=[
