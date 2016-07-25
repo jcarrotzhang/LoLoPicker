@@ -11,11 +11,13 @@ from scipy.cluster.vq import kmeans2, whiten
 
 def main(argv):
 	basecov = 300000000
+	SNPcut = 1
+	
 	if len(sys.argv) < 2:
 		print 'usage: LoLoPicker_stats.py -o <outputpath>'
 		sys.exit(1)
 	try:
-		opts, args = getopt.getopt(argv,"ho:s:g", ["help","outputpath=","intervalsize=", "genome="])
+		opts, args = getopt.getopt(argv,"ho:s:g:c", ["help","outputpath=","intervalsize=", "genome=", "SNPcutoff="])
 	except getopt.GetoptError:
 		print 'usage: LoLoPicker_stats.py -o <outputpath>'
 		sys.exit(2)
@@ -32,8 +34,10 @@ def main(argv):
 			basecov = arg
 		elif opt in ("-g", "--genome"):
 			basecov = 30000000000
+		elif opt in ("-c", "--SNPcutoff"):
+			SNPcut = arg
 
-        return inputvariant, statsfile, rejectfile, int(basecov)
+        return inputvariant, statsfile, rejectfile, int(basecov), int(SNPcut)
 
 if __name__ == '__main__':
         (inputvariant, statsfile, rejectfile, basecov) = main(sys.argv[1:])
@@ -68,7 +72,7 @@ if __name__ == '__main__':
 						c_ref_total = c_ref_total + int(c_ref)
 					elif alf >= 0.5:
 						SNP += 1
-						if SNP > 3:
+						if SNP > SNPcut:
 							stats_hash[k] = str(t_refcount), str(t_alt_count), str(n_refcount), str(n_alt_count), "possible_SNP", float(p_value)
 							break
 					else:
