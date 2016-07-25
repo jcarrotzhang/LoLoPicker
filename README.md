@@ -31,7 +31,7 @@ python LoLoPicker_control.py -l samplelist.txt -r reference.fa -o outputpath
 
 python LoLoPicker_stats.py -o outputpath 
 
-######(options: --genome for_analyzing_WGS_data)
+######(options: --genome for_analyzing_WGS_data --SNPcutoff default_is_variant_present_in_control_samples_less_than_2_times)
 
 #####For analyzing whole-genome sequencing data, please split your job by genomic intervals (e.g. chromosomes) and merge all your control_stats.txt files before going to step three.
 
