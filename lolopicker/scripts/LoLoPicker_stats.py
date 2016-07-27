@@ -40,7 +40,7 @@ def main(argv):
         return inputvariant, statsfile, rejectfile, int(basecov), int(SNPcut)
 
 if __name__ == '__main__':
-        (inputvariant, statsfile, rejectfile, basecov) = main(sys.argv[1:])
+        (inputvariant, statsfile, rejectfile, basecov, SNPcut) = main(sys.argv[1:])
 
 	stats_hash = {}
 	varfile = open(inputvariant)
@@ -161,8 +161,8 @@ if __name__ == '__main__':
 	stats_sorted = sorted(stats_hash.items(), key=lambda kv: kv[1][5], reverse=True)
 	j=1; pre_p = 1
 
-	print >>ftemp1, "#chr\tpos\tref\talt\ttumor_ref_reads\ttumor_alt_reads\treference_ref_reads\treference_alt_reads\tcontrol_alf\tp_value\tcorrected_p"
-	print >>ftemp2, "#chr\tpos\tref\talt\ttumor_ref_reads\ttumor_alt_reads\treference_ref_reads\treference_alt_reads\tcontrol_alf\tp_value\tcorrected_p"
+	print >>ftemp1, "#chr\tpos\tref\talt\ttumor_ref_reads\ttumor_alt_reads\ttumor_alf\treference_ref_reads\treference_alt_reads\tcontrol_info\tp_value\tcorrected_p"
+	print >>ftemp2, "#chr\tpos\tref\talt\ttumor_ref_reads\ttumor_alt_reads\ttumor_alf\treference_ref_reads\treference_alt_reads\tcontrol_info\tp_value\tcorrected_p"
 	for var in stats_sorted:
 		p = var[1][-1]
 		q = float(p) * int(basecov)
