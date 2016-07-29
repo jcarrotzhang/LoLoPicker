@@ -106,7 +106,7 @@ if __name__ == '__main__':
 					else:
 							#with two clusters, use lager cluster to filter SNP and use smaller group for binom
 						if cluster1 > cluster2:
-							if alfinfo.count('1') > 3:
+							if alfinfo.count('1') > SNPcut:
 								stats_hash[k] = str(t_refcount), str(t_alt_count), str(n_refcount), str(n_alt_count), "possible_SNP", float(p_value)
 							else:	
 								l = 0
@@ -139,7 +139,7 @@ if __name__ == '__main__':
 					c_alf_all = int(c_alt_total)/int(c_total)
 				if c_alf_all == 0:
 					c_alf_all = 1/5000
-				elif int(t_alt_count) >= 150:
+				if int(t_alt_count) >= 150:
 					p_value = 0
 				else:
 					pro = 0
