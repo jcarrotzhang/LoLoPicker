@@ -78,14 +78,14 @@ if __name__ == '__main__':
 		for variant in test_variants:
 				reftotal=0;
 				chr = variant[0];
-				pos = variant[1];
+				pos = variant[1]-1;
 				ref_seq = variant[2];
 				alt_base = variant[3]
 				for c_columns in samfile.pileup(chr, int(pos), int(pos)+1, truncate=True):
 					 if int(c_columns.pos) == int(pos):
                                                 (c_alt_A, c_alt_C, c_alt_G, c_alt_T, c_refcount) = process_reads(c_columns, c_columns.pos, ref_seq)
 						reftotal = reftotal + c_refcount
-						k = (chr+"\t"+str(pos)+"\t"+ref_seq+"\t"+alt_base)
+						k = (chr+"\t"+str(pos+1)+"\t"+ref_seq+"\t"+alt_base)
 						if alt_base == "A":
                                                                 variant_hash[k] = (str(c_alt_A)+":"+str(c_refcount)+":"+sampleID)
                                                 if alt_base == "G":
