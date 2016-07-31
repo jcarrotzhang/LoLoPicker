@@ -161,56 +161,56 @@ if __name__ == '__main__':
 							if totalcount > 4:
 								if (t_alt_A > tumor_alt_cutoff) and ((t_alt_A/totalcount) > tumor_alf_cutoff):
 									if (all(5 >= i for i in altReadPosS_f_A) and all(5 >= i for i in altReadPosS_r_A)) or (all(5 >= i for i in altReadPosE_f_A) and all(5 >= i for i in altReadPosE_r_A)):
-										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
+										raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
 										(n_alt_A, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "A")
 										if (n_refcount + n_alt_A) < 3:
-											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"germline_uncovered")
+											raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"germline_uncovered")
 										else: 
 											if (n_alt_A < normal_alt_cutoff) or ((n_alt_A/(n_refcount + n_alt_A)) < normal_alf_cutoff):
-												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"pass_to_test")
+												raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"pass_to_test")
 											else:
-												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"possible_germline")
+												raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"A"+"\t"+str(t_refcount)+"\t"+str(t_alt_A)+"\t"+str(n_refcount)+"\t"+str(n_alt_A)+"\t"+"possible_germline")
 								elif (t_alt_T > tumor_alt_cutoff) and ((t_alt_T/totalcount) > tumor_alf_cutoff): 
 									if (all(5 >= i for i in altReadPosS_f_T) and all(5 >= i for i in altReadPosS_r_T)) or (all(5 >= i for i in altReadPosE_f_T) and all(5 >= i for i in altReadPosE_r_T)):
-										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
+										raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
 										(n_alt_T, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "T")	
 										if (n_refcount + n_alt_T) < 3:
-											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"germline_uncovered")
+											raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"germline_uncovered")
 										else:
 											if (n_alt_T < normal_alt_cutoff) or ((n_alt_T/(n_refcount + n_alt_T)) < normal_alf_cutoff):
-												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"pass_to_test")
+												raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"pass_to_test")
 											else: 
-												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"possible_germline")
+												raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"T"+"\t"+str(t_refcount)+"\t"+str(t_alt_T)+"\t"+str(n_refcount)+"\t"+str(n_alt_T)+"\t"+"possible_germline")
 								elif (t_alt_G > tumor_alt_cutoff) and ((t_alt_G/totalcount) > tumor_alf_cutoff): 
 									if (all(5 >= i for i in altReadPosS_f_G) and all(5 >= i for i in altReadPosS_r_G)) or (all(5 >= i for i in altReadPosE_f_G) and all(5 >= i for i in altReadPosE_r_G)):
-										raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
+										raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
 										(n_alt_G, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "G")
 										if (n_refcount + n_alt_G) < 3:
-											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"germline_uncovered")
+											raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"germline_uncovered")
 										else:
 											if (n_alt_G < normal_alt_cutoff) or ((n_alt_G/(n_refcount + n_alt_G)) < normal_alf_cutoff):
-												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"pass_to_test")
+												raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"pass_to_test")
 											else:
-												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"possible_germline")
+												raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"G"+"\t"+str(t_refcount)+"\t"+str(t_alt_G)+"\t"+str(n_refcount)+"\t"+str(n_alt_G)+"\t"+"possible_germline")
 								elif (t_alt_C > tumor_alt_cutoff) and ((t_alt_C/totalcount) > tumor_alf_cutoff):
 									if (all(5 >= i for i in altReadPosS_f_C) and all(5 >= i for i in altReadPosS_r_C)) or (all(5 >= i for i in altReadPosE_f_C) and all(5 >= i for i in altReadPosE_r_C)):
-							 			raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
+							 			raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+"0"+"\t"+"0"+"\t"+"clustered_pos")
 									else:
 										(n_alt_C, n_refcount) = filter_germline(chr, t_columns.pos, ref_seq, "C")
 										if (n_refcount + n_alt_C) < 3:
-											raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"germline_uncovered")
+											raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"germline_uncovered")
 										else:
 											if (n_alt_C < normal_alt_cutoff) or ((n_alt_C/(n_refcount + n_alt_C)) < normal_alf_cutoff):
-												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"pass_to_test")
+												raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"pass_to_test")
 											else: 
-												raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"possible_germline")
+												raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"C"+"\t"+str(t_refcount)+"\t"+str(t_alt_C)+"\t"+str(n_refcount)+"\t"+str(n_alt_C)+"\t"+"possible_germline")
 								else:
-									raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"N"+"\t"+str(t_refcount)+"\t"+"0"+"\t"+"0"+"\t"+"0"+"\t"+"low_mutant_reads")
+									raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"N"+"\t"+str(t_refcount)+"\t"+"0"+"\t"+"0"+"\t"+"0"+"\t"+"low_mutant_reads")
 							else:
-								raw_calls = (chr+"\t"+str(pos)+"\t"+ref_seq.upper()+"\t"+"N"+"\t"+"0"+"\t"+"0"+"\t"+"0"+"\t"+"0"+"\t"+"low_total_reads")
+								raw_calls = (chr+"\t"+str(pos+1)+"\t"+ref_seq.upper()+"\t"+"N"+"\t"+"0"+"\t"+"0"+"\t"+"0"+"\t"+"0"+"\t"+"low_total_reads")
 							raws.append(raw_calls)
 							print >>ftemp, raw_calls
 
