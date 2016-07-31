@@ -8,7 +8,7 @@ import pysamstats
 def main(argv):
 	base_quality = 30
 	mapping_quality = 30
-	tumor_alt_cutoff = 2
+	tumor_alt_cutoff = 1
 	tumor_alf_cutoff = 0
 	normal_alt_cutoff = 2
 	normal_alf_cutoff = 0	
