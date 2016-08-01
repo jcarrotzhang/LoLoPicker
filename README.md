@@ -31,7 +31,7 @@ python LoLoPicker_control.py -l samplelist.txt -r reference.fa -o outputpath
 
 python LoLoPicker_stats.py -o outputpath 
 
-######(options: --genome for_analyzing_WGS_data --SNPcutoff keep_variants_present_in_number_of_normal_samples_less_than_cutoff)
+######(options: --genome for_analyzing_WGS_data --SNPcutoff keep_variants_present_in_number_of_normal_samples_less_than_cutoff --intervalsize: size_of_the_targeted_region_of_your_experiment).
 
 #####For analyzing whole-genome sequencing data, please split your job by genomic intervals (e.g. chromosomes) and merge all your control_stats.txt files before going to step three.
 
