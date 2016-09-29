@@ -153,7 +153,7 @@ if __name__ == '__main__':
 					t_power = float(stats.binom_test(critical_val, int(t_total)+int(n_total), 0.3, 'greater'))
 					n_power = float(stats.binom_test(critical_val, int(t_total)+int(n_total), 0.5, 'greater'))	
 
-					if t_power < 0.95 or n_power < 0.95:
+					if t_power < 0.8 or n_power < 0.8:
 						stats_hash[k] = str(t_refcount), str(t_alt_count), str(n_refcount), str(n_alt_count), str(c_alt_total)+":"+str(c_total)+":uncovered", 1
 					else: 
 						stats_hash[k] = str(t_refcount), str(t_alt_count), str(n_refcount), str(n_alt_count), str(c_alt_total)+":"+str(c_total), float(p_value)	
