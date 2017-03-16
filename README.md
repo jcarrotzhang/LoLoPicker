@@ -15,7 +15,7 @@ pip install pysamstats
 
 ## Step one: calling raw, somatic variants using matched tumor/normal
 ```
-python LoLoPicker_somatic.py -t tumor.bam -n normal.bam -r reference.fa -b interval.bed (e.g. CCDS_in_bed_format) -o outputpath 
+python LoLoPicker_somatic.py -t tumor.bam -n normal.bam -r reference.fa -b interval.bed -o outputpath 
 ```
 ##### options: #####
 * --basequality: only_count_reads_with_base_quality_above_cutoff 
