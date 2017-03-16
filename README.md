@@ -1,11 +1,11 @@
 # LoLoPicker
 
 #Installation
-#####git clone https://github.com/jcarrotzhang/LoLoPicker
-#####cd LoLoPicker
-#####python setup.py install
-######dependencies pysam 0.8.4; pysamstats
-######e.g.
+***git clone https://github.com/jcarrotzhang/LoLoPicker
+***cd LoLoPicker
+***python setup.py install
+***dependencies pysam 0.8.4; pysamstats
+***e.g.
 ######$ pip install pysam==0.8.4
 ######$ pip install pysamstats
 ######Please note that LoLoPicker is no longer available on PyPI
