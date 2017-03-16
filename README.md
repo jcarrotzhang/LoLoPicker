@@ -18,10 +18,10 @@ pip install pysamstats
 python LoLoPicker_somatic.py -t tumor.bam -n normal.bam -r reference.fa -b interval.bed (e.g. CCDS_in_bed_format) -o outputpath 
 ```
 ##### options: #####
-* --basequality only_count_reads_with_base_quality_above_cutoff 
-* --mappingquality only_count_reads_with_mapping_quality_above_cutoff 
-* --tumoralteredreads keep_variants_where_number_of_altered_reads_in_tumor_more_than_cutoff
-* --normalalteredreads keep_variants_where_number_of_altered_reads_in_normal_less_than_cutoff
+* --basequality: only_count_reads_with_base_quality_above_cutoff 
+* --mappingquality: only_count_reads_with_mapping_quality_above_cutoff 
+* --tumoralteredreads: keep_variants_where_number_of_altered_reads_in_tumor_more_than_cutoff
+* --normalalteredreads: keep_variants_where_number_of_altered_reads_in_normal_less_than_cutoff
 
 ## Step two: inspecting your control cohort
 ```
@@ -30,7 +30,7 @@ python LoLoPicker_control.py -l samplelist.txt -r reference.fa -o outputpath
 ##### options: ##### 
 * --basequality 
 * --mappingquality
-* -n thread
+* -n: number of threads
 
 ###### please provide your control panel in samplelist.txt using the following tab-delimited format:
 ```
@@ -42,8 +42,8 @@ Bam_file_of_each_control      control_sampleID
 python LoLoPicker_stats.py -o outputpath 
 ```
 ##### options: #####
-* --genome for_analyzing_WGS_data 
-* --SNPcutoff keep_variants_present_in_number_of_normal_samples_less_than_cutoff 
+* --genome: for_analyzing_WGS_data 
+* --SNPcutoff: keep_variants_present_in_number_of_normal_samples_less_than_cutoff 
 * --intervalsize: size_of_the_targeted_region_of_your_experiment
 
 ##### Note: 
