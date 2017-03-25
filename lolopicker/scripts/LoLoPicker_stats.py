@@ -164,20 +164,21 @@ if __name__ == '__main__':
 	print >>ftemp1, "#chr\tpos\tref\talt\ttumor_ref_reads\ttumor_alt_reads\ttumor_alf\treference_ref_reads\treference_alt_reads\tcontrol_info(Readcount_alt:Readcount_ref)\tp_value\tcorrected_p\tjudgement"
 	print >>ftemp2, "#chr\tpos\tref\talt\ttumor_ref_reads\ttumor_alt_reads\ttumor_alf\treference_ref_reads\treference_alt_reads\tinfo\tp_value\tcorrected_p\tjudgement"
 	for var in stats_sorted:
-		p = var[1][-1]
-		q = float(p) * int(basecov)
-		tot = int(var[1][0])+int(var[1][1])
-		if q > 1:
-			q = 1
+		if '#' not in var[0]:
+			p = var[1][-1]
+			q = float(p) * int(basecov)
+			tot = int(var[1][0])+int(var[1][1])
+			if q > 1:
+				q = 1
 
-		if tot!=0:
-			flt = int(var[1][1])/tot
-			if q < 0.05:
-				results=(str(var[0])+"\t"+str(var[1][0])+"\t"+str(var[1][1])+"\t"+str(flt)+"\t"+str(var[1][2])+"\t"+str(var[1][3])+"\t"+str(var[1][4])+"\t"+str(p)+"\t"+str(q)+"\t"+"real")
-				print >>ftemp1, results
-			else:
-				results=(str(var[0])+"\t"+str(var[1][0])+"\t"+str(var[1][1])+"\t"+str(flt)+"\t"+str(var[1][2])+"\t"+str(var[1][3])+"\t"+str(var[1][4])+"\t"+str(p)+"\t"+str(q)+"\t"+"reject")
-				print >>ftemp2, results
+			if tot!=0:
+				flt = int(var[1][1])/tot
+				if q < 0.05:
+					results=(str(var[0])+"\t"+str(var[1][0])+"\t"+str(var[1][1])+"\t"+str(flt)+"\t"+str(var[1][2])+"\t"+str(var[1][3])+"\t"+str(var[1][4])+"\t"+str(p)+"\t"+str(q)+"\t"+"real")
+					print >>ftemp1, results
+				else:
+					results=(str(var[0])+"\t"+str(var[1][0])+"\t"+str(var[1][1])+"\t"+str(flt)+"\t"+str(var[1][2])+"\t"+str(var[1][3])+"\t"+str(var[1][4])+"\t"+str(p)+"\t"+str(q)+"\t"+"reject")
+					print >>ftemp2, results
 	ftemp1.close()
 	ftemp2.close()
 	print "Done LoLoPicker!"
