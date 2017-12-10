@@ -12,7 +12,7 @@ def main(argv):
 	tumor_alf_cutoff = 0
 	normal_alt_cutoff = 3
 	normal_alf_cutoff = 0
-	phasing_mode = "Y"
+	phasing_mode = "N"
 
 	if len(sys.argv) < 5:
 		print 'usage: python LoLoPicker_somatic.py -t <tumor.bam> -n <normal.bam> -r <reference.fa> -b <intervals.bed> -o <outputpath>'
