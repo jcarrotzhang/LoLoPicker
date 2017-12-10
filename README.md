@@ -1,5 +1,12 @@
 # LoLoPicker
 
+
+### Haplotype filter adapting to 10X genomics (HP) is added in the recent update.
+
+* use --phasing_mode Y to activate HP filter. 
+* detailed description will appear in a manuscript of 10X genomic sequencing.
+
+
 ## Installation
 ```
 git clone https://github.com/jcarrotzhang/LoLoPicker
