@@ -46,7 +46,7 @@ Bam_file_of_each_control      control_sampleID
 
 # Step three: performing core stats
 ```
-python LoLoPicker_stats.py -o outputpath 
+python LoLoPicker_stats.py -o outputpath --method FDR (or Bonferroni)
 ```
 ##### options: #####
 * --genome: for_analyzing_WGS_data 
